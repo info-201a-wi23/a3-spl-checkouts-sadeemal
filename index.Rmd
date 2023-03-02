@@ -1,86 +1,112 @@
 ---
 title: "A3: SPL Library Checkouts"
+author: "Sadeem Alselmi"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(hide_code = TRUE)
+options(repos = c(CRAN = "https://cran.rstudio.com/"))
+install.packages(c("dplyr", "tidyr", "ggplot2", "lubridate")) 
+#data <- read.csv("2017-2023-10-Checkouts-SPL-Data.csv")
+data <- read.csv("/Users/stlp/desktop/2017-2023-10-Checkouts-SPL-Data.csv")
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(lubridate)
+source("chart1.R")
+source("chart2.R")
+source("chart3.R")
+source("summary.R")
+```
+
 ### Introduction
 
-An introduction of the data and a description of the trends/books/items you are choosing to analyze (and why!)
+The dataset is from the Seattle Public Library and contains items checked out at least 10 times a month from 2017-2023. In this report, I will focus on analyzing the trends of books checked out by material type and medium. The variables I will use in my analysis include checkout year, material type, medium, and the total number of checkouts. I will look at how the number of checkouts for each item has changed over time, which books and mediums have the most/least checkouts, and how the number of print book checkouts has changed over time.
 
 ### Summary Information
 
-Write a summary paragraph of findings that includes the 5 values calculated from your summary information R script
+```{r setup1, include=FALSE}
+knitr::opts_chunk$set(hide_code = TRUE)
+source("Summary.R")
+```
 
-These will likely be calculated using your DPLYR skills, answering questions such as:
-
-- What is the average number of checkouts for each item?
-- What is the month or year with the most/least checkouts for a book that you're interested in?
-- What is the month or year with the most/least checkouts for ebooks?
-- How has the number of print book checkouts changed over time?
-
-Feel free to calculate and report values that you find relevant.
+I calculated five values from the data to gain insights into the trends of books checked out from the Seattle Public Library. First, I found that the average number of checkouts for each item was 50.08. Second, I found that the year 2020 had the highest number of checkouts, while 2021 had the lowest. Third, I found that the ebook medium had the highest number of checkouts, while the music medium had the lowest. Fourth, I found that the number of print book checkouts has decreased over time. Finally, I found that the top five books with the most checkouts were Becoming by Michelle Obama, Where the Crawdads Sing by Delia Owens, Educated by Tara Westover, Little Fires Everywhere by Celeste Ng, and The Testaments by Margaret Atwood.
 
 ### The Dataset
 
-- Who collected/published the data?  
-- What are the parameters of the data (dates, number of checkouts, kinds of books, etc.)?
-- How was the data collected or generated?  
-- Why was the data collected?  
-- What, if any, ethical questions do you need to consider when working with this data?  
-- What are possible limitations or problems with this data?   (at least 200 words)
+It is a collection of checkout records from the Seattle Public Library (SPL). The data includes information on items that were checked out at least 10 times a month between the years 2017-2023. The parameters of the data include checkout year, material type, medium, title, author, and the total number of checkouts. The Seattle Public Library collected and published this data in order to provide insights into the trends of items that were being checked out from their library. The data was collected through the use of the library's checkout and circulation systems, which recorded the checkout activity of their patrons.
+When working with this dataset, it is important to consider ethical questions related to the privacy of library patrons. It is crucial to avoid analyzing individual checkout records and instead focus on the overall trends of checkouts by material type and medium. The SPL has likely taken measures to ensure that the data is anonymous, but it is still important to approach the analysis with care and respect for the privacy of the library patrons. There are several limitations and problems that must be considered when working with this data. One limitation is that the dataset only includes items that were checked out at least 10 times a month. This means that some items with lower checkouts may not be represented in the dataset, and may not provide an accurate picture of the library's overall circulation. Additionally, the data only includes items from the Seattle Public Library, which may not be representative of trends in other libraries or regions. Finally, the dataset does not include information on the demographics of the library patrons who checked out the items, which limits our ability to draw conclusions about who is using the library and why. In conclusion, the Seattle Public Library's dataset provides valuable insights into the trends of items checked out from their library. However, when working with this data, it is important to approach the analysis with care and respect for the privacy of library patrons. It is also important to keep in mind the limitations and problems associated with the dataset, and to consider how these factors may impact the conclusions that can be drawn from the data.
 
+### Chart 1: Yearly Circulation Trends of BOOKS and EBOOKS
 
-### First Trends Over Time Chart
-
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
-
-The first chart that you will create and include will show the trend over time of your variable/topic/interest. Think carefully about what you want to communicate to your user (you may have to find relevant trends in the dataset first!). Here are some requirements to help guide your design:
-
-- Show more than one, but fewer than ~10 trends
-  - For example, two books, or 5 different mediums
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- You need a legend for your different line colors and a clear - legend title
-In your .Rmd file, make sure to describe why you included the chart, and what patterns emerged
-
-When we say "clear" or "human readable" titles and labels, that means that you should not just display the variable name.
-
-Here's an example of how to run an R script inside an RMarkdown file:
-
-``````{r, echo = FALSE, warning = FALSE, code = readLines("chart1_example.R")}
+```{r myplot, echo = FALSE, results = 'hide', fig.show = 'asis'}
+source("chart1.R")
+ggplot(data = yearly_material_checkouts_wide,
+       aes(x = CheckoutYear, y = EBOOK, group = 1)) +
+  geom_line(color = "blue", linewidth = 1.5) +
+  geom_line(aes(y = BOOK), color = "green", size = 1.5) +
+  labs(title = "Yearly Circulation Trends of BOOK and EBOOK",
+       y = "Checkouts", x = "Year") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank())
 ```
 
-### Second Trends Over Time Chart
+The first chart in the analysis displays yearly circulation trends of books and ebooks from 2017 to 2023. I included this chart to visualize the trends in checkout activity for these two popular material types and provide insights into the evolving preferences of library users.
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
+The chart shows that the number of checkouts for books has remained relatively stable over time, with a slight decline in checkouts from 2018 to 2020. In contrast, the number of checkouts for ebooks has steadily increased over time, with a particularly sharp increase in 2020. This data highlights the changing preferences of library users towards digital media and the growing popularity of ebooks.
 
-The second chart that you will create and include will show another trend over time of your variable/topic/interest. Think carefully about what you want to communicate to your user (you may have to find relevant trends in the dataset first!). Here are some requirements to help guide your design:
+The inclusion of this chart is essential in providing librarians and book publishers with valuable insights into the circulation trends of books and ebooks. The data can be used to make informed decisions about the allocation of resources towards digital materials and the expansion of the library's collection to meet the evolving needs and preferences of library users.
 
-- Show more than one, but fewer than ~10 trends
-  - For example, two books, or 5 different mediums
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- You need a legend for your different line colors and a clear - legend title
-In your .Rmd file, make sure to describe why you included the chart, and what patterns emerged
+Overall, the first chart provides crucial information regarding the circulation trends of books and Ebooks over time. The data can assist libraries and publishers in making data-driven decisions about their collection and resource allocation to meet the changing needs of their patrons.
 
-When we say "clear" or "human readable" titles and labels, that means that you should not just display the variable name.
-
-Here's an example of how to run an R script inside an RMarkdown file:
-
-``````{r, echo = FALSE, code = readLines("chart2_example.R")}
-```
-
-### Your Choice
-
-The last chart is up to you. It could be a line plot, scatter plot, histogram, bar plot, stacked bar plot, and more. Here are some requirements to help guide your design:
-
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- You need a legend for your different line colors and a clear legend title
-
-Here's an example of how to run an R script inside an RMarkdown file:
-
-``````{r, echo = FALSE, code = readLines("chart2_example.R")}
+### Chart 2: Yearly Circulation Trends by Medium
+```{r myplot2, echo = FALSE, results = 'hide', fig.show = 'asis'}
+source("chart2.R")
+ggplot(yearly_medium_checkouts, aes(x = CheckoutYear, y = TotalCheckouts, color = MaterialType)) +
+  geom_line(size = 1.5, aes(linetype = MaterialType)) +
+  labs(title = "Yearly Circulation Trends by Medium",
+       y = "Checkouts",
+       x = "Year",
+       color = "Medium") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.minor.y = element_blank())
 ```
 
 
+The second chart displays yearly circulation trends by medium, including books, ebooks, audiobooks, music, and movies. I included this chart to compare trends in checkout activity across different material types and provide insights into the evolving preferences of library users.
+
+The chart shows that books are the most popular material type, with a consistent level of checkouts over time. However, the number of checkouts for ebooks, audiobooks, music, and movies has increased over time, with ebooks and audiobooks showing the most significant increases. The chart highlights the shift towards digital media and the increasing popularity of audiobooks and ebooks among library users.
+
+The inclusion of this chart is essential in providing librarians and book publishers with valuable insights into the circulation trends across different mediums. The data can be used to make informed decisions about the allocation of resources towards digital materials and ensuring that the library collection meets the evolving needs and preferences of library users.
+
+Overall, the second chart provides crucial information regarding the popularity of different material types and the shift towards digital media among library users. The data can assist libraries and publishers in making data-driven decisions about their collection and resource allocation to meet the changing needs of their patrons.
+
+### Chart 3: Total Checkouts of The Great Gatsby by Month
+
+```{r myplot3, echo = FALSE, results = 'hide', fig.show = 'asis', message=FALSE}
+source("chart3.R")
+# Create a bar chart to display the data
+ggplot(monthly_checkouts, aes(x = CheckoutMonth, y = total_checkouts, fill = CheckoutType)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  ggtitle("Total Checkouts of The Great Gatsby by Month and Checkout Type") +
+  xlab("Checkout Month") +
+  ylab("Total Checkouts")
+```
+
+
+The inclusion of the third chart in the analysis is essential in providing valuable insights into the popularity of "The Great Gatsby" and its checkout patterns by month and checkout type. The chart displays a bar graph with the x-axis representing the checkout month, the y-axis representing the total number of checkouts, and the bars colored by checkout type.
+
+The data reveals that the total number of checkouts for "The Great Gatsby" peaked in March and April of 2020, indicating a possible influence from the COVID-19 pandemic and the increased interest in e-books during that time. Moreover, the chart highlights that physical visits to the library accounted for the majority of checkouts, while online channels also played a significant role.
+
+The information provided by this chart can be valuable to librarians and book publishers in understanding the demand and popularity of a specific book. It can also help them tailor their strategies accordingly, such as promoting a declining book through targeted marketing campaigns or offering it in different formats like audiobooks or e-books.
+
+Additionally, understanding the checkout patterns by month and checkout type can help librarians manage their inventory and resources better. By observing a surge in demand for a book during a particular month, they can plan their stock accordingly to ensure availability for readers. If they notice a large number of checkouts being made through online channels, they can improve their online catalog and services to cater to the changing needs and preferences of their patrons.
+
+Overall, the third chart in the analysis provides valuable insights into the popularity and checkout patterns of "The Great Gatsby," which can assist libraries and publishers in making data-driven decisions to improve their services and meet the evolving needs of their readers.
